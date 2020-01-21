@@ -1,0 +1,14 @@
+{
+  "name": "bean-2020",
+  "version": "0.0.1",
+  "description": "Creacion de un formulario + app de contacto",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "smessina",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
