@@ -59,13 +59,49 @@ server.post("/enviar", function(request, response){
 	// Tarea 1: validar que no esten vacios antes de enviar el email
 	// Tarea 2: definir un mensaje si sale biem o si sale mal en el response
 
-	//Envio de mail...
-	miniOutlook.sendMail({
-		from : datos.consulta.correo,
-		to : "silvio.messina@eant.tech",
-		subject : datos.consulta.asunto,
-		html : "<strong>" + datos.consulta.mensaje + "</strong>"
-	})
+	/******* ACA DEBERIA VALIDAR *******/
+	if( datos.consulta.nombre == "" ){
 
-	response.json( datos )
+		response.json({
+			rta : "error",
+			msg : "El nombre no puede quedar vacio"
+		})
+
+	} else if( datos.consulta.correo == "" || datos.consulta.correo.indexOf("@") == -1 ){
+
+		response.json({
+			rta : "error",
+			mgs : "Ingrese un correo valido"
+		})
+
+	} else if( datos.consulta.asunto == "" ){
+
+		response.json({
+			rta : "error",
+			mgs : "Elija un asunto"
+		})
+
+	} else if( datos.consulta.mensaje.length < 50 || datos.consulta.mensaje.length > 200 ){
+
+		response.json({
+			rta : "error",
+			mgs : "Ingrese un mensaje entre 50 y 200 caracteres"
+		})
+
+	} else {
+		
+		//Envio de mail...
+		miniOutlook.sendMail({
+			from : datos.consulta.correo,
+			to : "silvio.messina@eant.tech",
+			subject : datos.consulta.asunto,
+			html : "<strong>" + datos.consulta.mensaje + "</strong>"
+		})
+
+		response.json( datos )		
+	}
+
+	/******* ACA DEBERIA ESTAR VALIDADO *******/
+
+
 })
