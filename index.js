@@ -1,6 +1,7 @@
 const express = require("express")
 const bodyParser = require("body-parser")
 const nodemailer = require("nodemailer")
+const multer = require("multer")
 
 /* INICIO CONFIGS NODEMAILER */
 
@@ -40,12 +41,15 @@ const public = express.static("public")
 
 const json = bodyParser.json()
 
-const urlencoded = bodyParser.urlencoded({ extended : false })
+const urlencoded = bodyParser.urlencoded({ extended : true })
+
+const upload = multer()
 
 /* Buscar archivos estaticos en el directorio /public */
 server.use( public )
 server.use( json )
 server.use( urlencoded )
+server.use( upload.array() )
 
 server.listen( port )
 
@@ -56,25 +60,27 @@ server.post("/enviar", function(request, response){
 		consulta : request.body
 	}
 
-	// Tarea 1: validar que no esten vacios antes de enviar el email
-	// Tarea 2: definir un mensaje si sale biem o si sale mal en el response
+	console.log(datos)
+
+	// Tarea: Implementar el modulo JOI para validar "esquemas" de datos
+	// URL: https://github.com/hapijs/joi
 
 	/******* ACA DEBERIA VALIDAR *******/
-	if( datos.consulta.nombre == "" ){
+	if( datos.consulta.nombre == "" || datos.consulta.nombre == null ){
 
 		response.json({
 			rta : "error",
 			msg : "El nombre no puede quedar vacio"
 		})
 
-	} else if( datos.consulta.correo == "" || datos.consulta.correo.indexOf("@") == -1 ){
+	} else if( datos.consulta.correo == "" || datos.consulta.correo == null || datos.consulta.correo.indexOf("@") == -1 ){
 
 		response.json({
 			rta : "error",
 			mgs : "Ingrese un correo valido"
 		})
 
-	} else if( datos.consulta.asunto == "" ){
+	} else if( datos.consulta.asunto == "" || datos.consulta.asunto == null ){
 
 		response.json({
 			rta : "error",
@@ -89,7 +95,7 @@ server.post("/enviar", function(request, response){
 		})
 
 	} else {
-		
+
 		//Envio de mail...
 		miniOutlook.sendMail({
 			from : datos.consulta.correo,

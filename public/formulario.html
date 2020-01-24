@@ -43,7 +43,24 @@
 
 			formulario.onsubmit = function(evento){
 				evento.preventDefault()
-				alert("Vamo a enviar lo dato...")
+
+				let ahora = new Date()
+				let datos = new FormData(this)
+
+				datos.append("fecha", ahora.toString() )
+
+				//Enviar datos asincronicamente...
+				fetch(this.action, {
+					method : this.method,
+					body : datos
+				}).then(function(response){
+					return response.json()
+				}).then(function(server){
+
+					alert(server.msg)
+
+				})
+
 			}
 			
 		</script>
