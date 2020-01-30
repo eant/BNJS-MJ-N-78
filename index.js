@@ -98,7 +98,8 @@ server.post("/enviar", function(request, response){
 	let validacion = schema.validate(datos.consulta)
 
 	if( validacion.error ){
-		response.json( validacion.error )
+
+		response.json({ msg : validacion.error.details[0].message })
 	} else {
 		//Envio de mail...
 		miniOutlook.sendMail({
